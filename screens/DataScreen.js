@@ -1,5 +1,5 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {View, ImageBackground, FlatList, Dimensions, StyleSheet, Text} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, ImageBackground, FlatList, Dimensions, StyleSheet, Text, ActivityIndicator} from 'react-native';
 import axios from 'axios';
 import Header from '../components/HeaderDataScreen';
 import SearchBar from '../components/SearchBar';
@@ -16,17 +16,22 @@ const DataScreen = ({navigation}) => {
   const [totalData, setTotalData] = useState(25);
   const [errorMessage, setErrorMessage] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const response = await axios.get('https://jaktourband.vercel.app/api/data.json');
       setData(response.data);
     } catch (error) {
       console.error(error);
+      setErrorMessage('Failed to load data');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,11 +53,20 @@ const DataScreen = ({navigation}) => {
         <Header toggleMenu={() => setIsMenuOpen(!isMenuOpen)} />
         {isMenuOpen && <Menu onHistoryPress={() => navigation.navigate('History')} />}
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} totalData={totalData} setTotalData={setTotalData} />
-        {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
-        <FlatList data={searchQuery !== '' ? searchResults : data.slice(0, parseInt(totalData))} renderItem={renderItem} keyExtractor={(item, index) => index.toString()} />
-        <View style={styles.totalTextBackground}>
-          <Text style={styles.totalText}>Total Song: {data.length}</Text>
-        </View>
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#fff" />
+            <Text style={styles.loadingText}>Loading songlist...</Text>
+          </View>
+        ) : (
+          <>
+            {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
+            <FlatList data={searchQuery !== '' ? searchResults : data.slice(0, parseInt(totalData))} renderItem={renderItem} keyExtractor={(item, index) => index.toString()} />
+            <View style={styles.totalTextBackground}>
+              <Text style={styles.totalText}>Total Song: {data.length}</Text>
+            </View>
+          </>
+        )}
       </View>
     </ImageBackground>
   );
@@ -81,6 +95,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'red',
     marginVertical: 10,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#fff',
   },
 });
 

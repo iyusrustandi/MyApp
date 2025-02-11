@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, ImageBackground, StyleSheet, ActivityIndicator} from 'react-native';
+import {View, ImageBackground, StyleSheet, ActivityIndicator, Text} from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import {WebView} from 'react-native-webview';
 import Header from '../components/HeaderLyricsScreen';
@@ -24,7 +24,19 @@ const LyricsScreen = () => {
 
         {/* WebView untuk menampilkan halaman lirik */}
         {url ? (
-          <WebView source={{uri: url}} injectedJavaScript={injectedJS} startInLoadingState={true} renderLoading={() => <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />} scalesPageToFit={true} style={{flex: 1}} />
+          <WebView
+            source={{uri: url}}
+            injectedJavaScript={injectedJS}
+            startInLoadingState={true}
+            renderLoading={() => (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#fff" />
+                <Text style={styles.loadingText}>Loading lyrics...</Text>
+              </View>
+            )}
+            scalesPageToFit={true}
+            style={{flex: 1}}
+          />
         ) : (
           <View style={styles.errorContainer}>
             <Text style={styles.errorText}>No lyrics URL provided.</Text>
@@ -47,6 +59,16 @@ const styles = StyleSheet.create({
   loader: {
     flex: 1,
     justifyContent: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#fff',
   },
   errorContainer: {
     flex: 1,
