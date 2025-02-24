@@ -1,25 +1,25 @@
 import React from 'react';
-import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import google from '../assets/chrome.png';
+import Icon from 'react-native-vector-icons/Ionicons';
+import logo from '../assets/logo.png';
 
-const HeaderDataScreen = ({toggleMenu}) => {
+const Header = ({title}) => {
   const navigation = useNavigation();
 
   return (
     <View style={styles.header}>
       {/* Tombol Back dengan ikon dan tulisan */}
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Icon name="arrow-back" size={32} color="#fff" fontWeight="bold" />
+        <Icon name="arrow-back" size={32} color="#fff" />
       </TouchableOpacity>
 
       {/* Judul Header */}
-      <Text style={styles.heading}>Jaktourband Songlist</Text>
+      <Text style={styles.heading}>{title}</Text>
 
-      {/* Tombol navigasi halaman Google */}
-      <TouchableOpacity onPress={() => navigation.navigate('GoogleSearch')} style={styles.googleButton}>
-        <Image source={google} style={styles.google} />
+      {/* Logo */}
+      <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')} style={styles.logoButton}>
+        <Image source={logo} style={styles.logo} />
       </TouchableOpacity>
     </View>
   );
@@ -48,18 +48,17 @@ const styles = StyleSheet.create({
     left: 16,
     zIndex: 1,
   },
-  googleButton: {
-    backgroundColor: '#fff',
+  logoButton: {
     borderRadius: 8,
     position: 'absolute',
     right: 16,
     zIndex: 1,
   },
-  google: {
-    width: 50,
-    height: 50,
+  logo: {
+    width: 90,
+    height: 45,
     resizeMode: 'contain',
   },
 });
 
-export default HeaderDataScreen;
+export default Header;

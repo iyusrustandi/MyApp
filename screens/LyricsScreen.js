@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, ImageBackground, StyleSheet, ActivityIndicator, Text} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useRoute} from '@react-navigation/native';
 import {WebView} from 'react-native-webview';
 import Header from '../components/HeaderLyricsScreen';
@@ -8,6 +9,28 @@ import backgroundImg from '../assets/background.png';
 const LyricsScreen = () => {
   const route = useRoute();
   const {url, artist, song} = route.params || {};
+  const [loading, setLoading] = useState(true);
+
+  // Fungsi untuk menyimpan riwayat lirik
+  const saveToHistory = async () => {
+    try {
+      const history = JSON.parse(await AsyncStorage.getItem('lyricsHistory')) || [];
+      const newEntry = {artist, song, url, timestamp: new Date().toISOString()};
+
+      // Hindari duplikasi entri
+      const updatedHistory = [newEntry, ...history.filter((item) => item.url !== url)];
+
+      await AsyncStorage.setItem('lyricsHistory', JSON.stringify(updatedHistory));
+    } catch (error) {
+      console.error('Error saving history:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (url) {
+      saveToHistory(); // Simpan riwayat saat lirik dibuka
+    }
+  }, [url]);
 
   const injectedJS = `
     const link = document.createElement('link');
@@ -19,24 +42,17 @@ const LyricsScreen = () => {
   return (
     <ImageBackground source={backgroundImg} style={styles.backgroundImage}>
       <View style={styles.container}>
-        {/* Menggunakan komponen Header */}
         <Header artist={artist} song={song} />
 
-        {/* WebView untuk menampilkan halaman lirik */}
+        {loading && (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#fff" />
+            <Text style={styles.loadingText}>Loading lyrics...</Text>
+          </View>
+        )}
+
         {url ? (
-          <WebView
-            source={{uri: url}}
-            injectedJavaScript={injectedJS}
-            startInLoadingState={true}
-            renderLoading={() => (
-              <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color="#fff" />
-                <Text style={styles.loadingText}>Loading lyrics...</Text>
-              </View>
-            )}
-            scalesPageToFit={true}
-            style={{flex: 1}}
-          />
+          <WebView key={url} source={{uri: url}} injectedJavaScript={injectedJS} onLoad={() => setLoading(false)} onLoadStart={() => setLoading(true)} scalesPageToFit={true} style={{flex: 1}} />
         ) : (
           <View style={styles.errorContainer}>
             <Text style={styles.errorText}>No lyrics URL provided.</Text>
@@ -56,19 +72,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  loader: {
-    flex: 1,
-    justifyContent: 'center',
-  },
   loadingContainer: {
-    flex: 1,
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 1,
   },
   loadingText: {
     marginTop: 10,
-    fontSize: 16,
+    fontSize: 18,
     color: '#fff',
+    fontWeight: 'bold',
   },
   errorContainer: {
     flex: 1,

@@ -2,6 +2,19 @@ import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 
 const SongItem = ({artist, song, lyricsUrl, youtubeUrl, navigation}) => {
+  // Fungsi untuk menangani navigasi ke halaman Lyrics
+  const handleLyricsPress = () => {
+    if (lyricsUrl) {
+      navigation.navigate('LyricsScreen', {
+        url: lyricsUrl,
+        artist: artist,
+        song: song,
+      });
+    } else {
+      console.warn('Lyrics URL is missing.');
+    }
+  };
+
   // Fungsi untuk menangani navigasi ke halaman YouTube
   const handleYoutubePress = () => {
     if (youtubeUrl) {
@@ -17,22 +30,14 @@ const SongItem = ({artist, song, lyricsUrl, youtubeUrl, navigation}) => {
       <Text style={styles.tableCell}>{song}</Text>
 
       {/* Tombol untuk membuka halaman Lyrics */}
-      <TouchableOpacity
-        onPress={() =>
-          navigation.navigate('LyricsScreen', {
-            url: lyricsUrl, // URL lirik
-            artist: artist, // Nama artist
-            song: song, // Judul lagu
-          })
-        }
-      >
+      <TouchableOpacity onPress={handleLyricsPress} activeOpacity={0.7}>
         <View style={styles.lyricButtonContainer}>
           <Text style={styles.buttonText}>Lyrics</Text>
         </View>
       </TouchableOpacity>
 
       {/* Tombol untuk membuka halaman YouTube */}
-      <TouchableOpacity onPress={handleYoutubePress}>
+      <TouchableOpacity onPress={handleYoutubePress} activeOpacity={0.7}>
         <View style={styles.youtubeButtonContainer}>
           <Text style={styles.buttonText}>YouTube</Text>
         </View>
@@ -52,6 +57,7 @@ const styles = StyleSheet.create({
   tableCell: {
     flex: 1,
     fontSize: 18,
+    fontFamily: 'sans-serif-medium',
     fontWeight: 'bold',
     color: '#fff',
     textAlign: 'left',
@@ -59,15 +65,19 @@ const styles = StyleSheet.create({
   },
   lyricButtonContainer: {
     backgroundColor: '#0804f9',
-    padding: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
     borderRadius: 8,
-    marginHorizontal: 4,
+    marginHorizontal: 6,
+    alignItems: 'center',
   },
   youtubeButtonContainer: {
     backgroundColor: '#ff1100',
-    padding: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
     borderRadius: 8,
-    marginHorizontal: 4,
+    marginHorizontal: 6,
+    alignItems: 'center',
   },
   buttonText: {
     fontSize: 18,

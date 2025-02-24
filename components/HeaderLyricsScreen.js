@@ -11,7 +11,7 @@ const Header = ({artist, song}) => {
     <View style={styles.header}>
       {/* Tombol Back di sebelah kiri */}
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Icon name="arrow-back" size={32} color="#fff" fontWeight="bold" />
+        <Icon name="arrow-back" size={32} color="#fff" />
       </TouchableOpacity>
 
       {/* Artist and Song Title */}
@@ -23,7 +23,7 @@ const Header = ({artist, song}) => {
         </ScrollView>
       </View>
 
-      {/* Logo */}
+      {/* Logo di sebelah kanan */}
       <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')} style={styles.logoButton}>
         <Image source={logo} style={styles.logo} />
       </TouchableOpacity>
@@ -35,23 +35,23 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    justifyContent: 'center',
+    paddingVertical: 16,
     backgroundColor: '#050A30',
     elevation: 5,
     borderBottomWidth: 2,
-    borderBottomColor: '#fff',
+    borderBottomColor: '#ddd',
   },
   backButton: {
-    width: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: 'absolute',
+    left: 16,
+    zIndex: 1,
   },
   titleContainer: {
     flex: 1,
-    marginHorizontal: 8,
     alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 115,
   },
   headerText: {
     fontSize: 20,
@@ -60,12 +60,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   logoButton: {
-    width: 45,
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: 'absolute',
+    right: 16,
+    zIndex: 1,
   },
   logo: {
-    width: 45,
+    width: 90,
     height: 45,
     resizeMode: 'contain',
   },

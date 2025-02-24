@@ -30,19 +30,17 @@ const HomeScreen = () => {
   const fetchSlideshowData = async () => {
     try {
       const response = await axios.get('https://jaktourband.vercel.app/api/slideshow.json');
-      const slides = response.data.map((item) => item.slideshow);
+
+      if (!response.data || !Array.isArray(response.data)) {
+        throw new Error('Invalid data format');
+      }
+
+      const slides = response.data.map((item) => item.slideshow).filter((url) => typeof url === 'string' && url.trim() !== '');
+
       setImages(slides);
     } catch (error) {
-      console.error('Error fetching slideshow data:', error);
+      console.warn('Error fetching slideshow data:', error);
     }
-  };
-
-  const handleNavigateToDataScreen = () => {
-    navigation.navigate('DataScreen');
-  };
-
-  const handleNavigateToAboutPage = () => {
-    navigation.navigate('NewPage', {url: 'https://jaktourband.vercel.app/'});
   };
 
   return (
@@ -51,14 +49,31 @@ const HomeScreen = () => {
         <Header />
         {images.length > 0 ? <Image source={{uri: images[currentImgIndex]}} style={{...styles.homeImg, width: homeImgWidth, height: homeImgHeight}} /> : <Text style={styles.loadingText}>Loading slides...</Text>}
         <Text style={styles.title}>Welcome to Jaktour Band</Text>
-        <TouchableOpacity style={styles.button} onPress={handleNavigateToAboutPage}>
-          <Text style={styles.buttonText}>About</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleNavigateToDataScreen}>
-          <Text style={styles.buttonText}>Songlist</Text>
-        </TouchableOpacity>
+
+        {/* Menu dalam bentuk horizontal */}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AboutScreen')}>
+            <Text style={styles.buttonText}>About</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('DataScreen')}>
+            <Text style={styles.buttonText}>Songlist</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('GalleryScreen')}>
+            <Text style={styles.buttonText}>Gallery</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Tombol untuk History */}
+        <View style={styles.historyButtonContainer}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('HistoryScreen')}>
+            <Text style={styles.buttonText}>History</Text>
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.footer}>
-          <Text style={styles.versionText}>Version: 1.2.0</Text>
+          <Text style={styles.versionText}>Version: 2.0.0</Text>
         </View>
       </View>
     </ImageBackground>
@@ -92,12 +107,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 50,
+    marginTop: 25,
+  },
+  historyButtonContainer: {
+    marginTop: 50,
+  },
   button: {
     backgroundColor: '#007bff',
-    paddingVertical: 16,
-    paddingHorizontal: 64,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
     borderRadius: 8,
-    marginTop: 20,
+    width: 150,
+    alignItems: 'center',
   },
   buttonText: {
     color: '#fff',

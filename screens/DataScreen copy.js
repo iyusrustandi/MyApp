@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {View, ImageBackground, FlatList, Dimensions, StyleSheet, Text, ActivityIndicator, TouchableOpacity} from 'react-native';
+import {View, ImageBackground, FlatList, Dimensions, StyleSheet, Text, ActivityIndicator} from 'react-native';
 import axios from 'axios';
 import Header from '../components/HeaderDataScreen';
 import SearchBar from '../components/SearchBar';
 import SongItem from '../components/SongItem';
-import FooterDataScreen from '../components/FooterDataScreen';
+import Menu from '../components/Menu';
 import backgroundImg from '../assets/background.png';
 
 const screenWidth = Dimensions.get('window').width;
@@ -45,20 +45,13 @@ const DataScreen = ({navigation}) => {
     setErrorMessage(filteredData.length === 0 && searchQuery.trim() !== '' ? 'No results found' : '');
   };
 
-  const handlePrevious = () => {
-    setTotalData((prev) => Math.max(5, prev - 5)); // Minimal 5 lagu
-  };
-
-  const handleNext = () => {
-    setTotalData((prev) => Math.min(data.length, prev + 5)); // Maksimal jumlah lagu yang tersedia
-  };
-
   const renderItem = ({item}) => <SongItem artist={item.artist} song={item.song} lyricsUrl={item.lyrics} youtubeUrl={item.youtube} navigation={navigation} />;
 
   return (
     <ImageBackground source={backgroundImg} style={styles.backgroundImage}>
       <View style={styles.container}>
         <Header toggleMenu={() => setIsMenuOpen(!isMenuOpen)} />
+        {isMenuOpen && <Menu onHistoryPress={() => navigation.navigate('History')} />}
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} totalData={totalData} setTotalData={setTotalData} />
         {loading ? (
           <View style={styles.loadingContainer}>
@@ -69,7 +62,9 @@ const DataScreen = ({navigation}) => {
           <>
             {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
             <FlatList data={searchQuery !== '' ? searchResults : data.slice(0, parseInt(totalData))} renderItem={renderItem} keyExtractor={(item, index) => index.toString()} />
-            {!loading && <FooterDataScreen handlePrevious={handlePrevious} handleNext={handleNext} totalSongs={data.length} />}
+            <View style={styles.totalTextBackground}>
+              <Text style={styles.totalText}>Total Song: {data.length}</Text>
+            </View>
           </>
         )}
       </View>
@@ -86,11 +81,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  totalContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
+  totalTextBackground: {
+    padding: 8,
     backgroundColor: '#fff',
   },
   totalText: {
@@ -98,17 +90,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#050A30',
-  },
-  button: {
-    backgroundColor: '#050A30',
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    borderRadius: 8,
-  },
-  buttonText: {
-    fontSize: 18,
-    color: '#fff',
-    fontWeight: 'bold',
   },
   errorText: {
     textAlign: 'center',
@@ -122,9 +103,8 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     marginTop: 10,
-    fontSize: 18,
+    fontSize: 16,
     color: '#fff',
-    fontWeight: 'bold',
   },
 });
 

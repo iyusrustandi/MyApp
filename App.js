@@ -7,8 +7,10 @@ import DataScreen from './screens/DataScreen';
 import NewPage from './screens/NewPage';
 import HomeScreen from './screens/HomeScreen';
 import GoogleSearch from './screens/GoogleSearch';
-import History from './screens/History';
+import HistoryScreen from './screens/HistoryScreen';
 import LyricsScreen from './screens/LyricsScreen';
+import AboutScreen from './screens/AboutScreen';
+import GalleryScreen from './screens/GalleryScreen';
 
 const Stack = createStackNavigator();
 
@@ -27,8 +29,10 @@ export default function App() {
             <Stack.Screen name="DataScreen" component={DataScreen} options={{headerShown: false}} />
             <Stack.Screen name="NewPage" component={NewPage} options={{headerShown: false}} />
             <Stack.Screen name="GoogleSearch" component={GoogleSearch} options={{headerShown: false}} />
-            <Stack.Screen name="History" component={History} options={{headerShown: false}} />
+            <Stack.Screen name="HistoryScreen" component={HistoryScreen} options={{headerShown: false}} />
             <Stack.Screen name="LyricsScreen" component={LyricsScreen} options={{headerShown: false}} />
+            <Stack.Screen name="AboutScreen" component={AboutScreen} options={{headerShown: false}} />
+            <Stack.Screen name="GalleryScreen" component={GalleryScreen} options={{headerShown: false}} />
           </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaView>
