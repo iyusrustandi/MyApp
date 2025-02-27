@@ -1,8 +1,11 @@
 import React from 'react';
-import {View, Image, StyleSheet} from 'react-native';
+import {View, Image, StyleSheet, Dimensions, PixelRatio} from 'react-native';
 import logo from '../assets/logo.png';
 
-const Header = ({toggleMenu}) => {
+const {width, height} = Dimensions.get('window');
+const scale = PixelRatio.get();
+
+const Header = () => {
   return (
     <View style={styles.header}>
       <Image source={logo} style={styles.logo} />
@@ -27,8 +30,9 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   logo: {
-    width: 145,
-    height: 52,
+    width: width * 0.25,
+    height: width * 0.12,
+    resizeMode: 'contain',
   },
 });
 

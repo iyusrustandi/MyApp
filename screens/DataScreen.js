@@ -7,7 +7,7 @@ import SongItem from '../components/SongItem';
 import FooterDataScreen from '../components/FooterDataScreen';
 import backgroundImg from '../assets/background.png';
 
-const screenWidth = Dimensions.get('window').width;
+const {width, height} = Dimensions.get('window');
 
 const DataScreen = ({navigation}) => {
   const [data, setData] = useState([]);
@@ -42,7 +42,7 @@ const DataScreen = ({navigation}) => {
   const searchData = () => {
     const filteredData = data.filter((item) => item.artist.toLowerCase().includes(searchQuery.toLowerCase()) || item.song.toLowerCase().includes(searchQuery.toLowerCase()));
     setSearchResults(totalData === 'allsongs' ? filteredData : filteredData.slice(0, parseInt(totalData)));
-    setErrorMessage(filteredData.length === 0 && searchQuery.trim() !== '' ? 'No results found' : '');
+    setErrorMessage(filteredData.length === 0 && searchQuery.trim() !== '' ? 'No results found, open' : '');
   };
 
   const handlePrevious = () => {
@@ -67,7 +67,15 @@ const DataScreen = ({navigation}) => {
           </View>
         ) : (
           <>
-            {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
+            {errorMessage ? (
+              <View style={styles.errorTextContainer}>
+                <Text style={styles.errorText}>No results found, open </Text>
+                <TouchableOpacity onPress={() => navigation.navigate('GoogleSearch')}>
+                  <Text style={styles.linkText}>Chrome</Text>
+                </TouchableOpacity>
+              </View>
+            ) : null}
+
             <FlatList data={searchQuery !== '' ? searchResults : data.slice(0, parseInt(totalData))} renderItem={renderItem} keyExtractor={(item, index) => index.toString()} />
             {!loading && <FooterDataScreen handlePrevious={handlePrevious} handleNext={handleNext} totalSongs={data.length} />}
           </>
@@ -86,35 +94,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  totalContainer: {
+  errorTextContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#fff',
+    marginVertical: 10,
   },
-  totalText: {
-    fontSize: screenWidth * 0.03,
+  linkText: {
+    textDecorationLine: 'underline',
+    color: '#fff',
     fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#050A30',
+    fontSize: width * 0.04,
   },
-  button: {
-    backgroundColor: '#050A30',
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    borderRadius: 8,
-  },
-  buttonText: {
-    fontSize: 18,
+  errorText: {
+    fontSize: width * 0.03,
     color: '#fff',
     fontWeight: 'bold',
   },
-  errorText: {
-    textAlign: 'center',
-    color: 'red',
-    marginVertical: 10,
-  },
+
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',

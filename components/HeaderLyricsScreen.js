@@ -1,8 +1,10 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
+import {View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Dimensions} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import logo from '../assets/logo.png';
+
+const {width} = Dimensions.get('window');
 
 const Header = ({artist, song}) => {
   const navigation = useNavigation();
@@ -11,7 +13,7 @@ const Header = ({artist, song}) => {
     <View style={styles.header}>
       {/* Tombol Back di sebelah kiri */}
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Icon name="arrow-back" size={32} color="#fff" />
+        <Icon name="arrow-back" size={width * 0.08} color="#fff" />
       </TouchableOpacity>
 
       {/* Artist and Song Title */}
@@ -48,13 +50,14 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   titleContainer: {
-    flex: 1,
+    maxWidth: '60%',
+    flexShrink: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 115,
+    marginHorizontal: 20,
   },
   headerText: {
-    fontSize: 20,
+    fontSize: width * 0.045,
     fontWeight: 'bold',
     color: '#fff',
     textAlign: 'center',
@@ -65,8 +68,8 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   logo: {
-    width: 90,
-    height: 45,
+    width: width * 0.15,
+    height: width * 0.1,
     resizeMode: 'contain',
   },
 });

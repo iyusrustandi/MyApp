@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Image, ActivityIndicator, ScrollView, ImageBackground, FlatList, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, Image, ActivityIndicator, ScrollView, ImageBackground, FlatList, TouchableOpacity, Dimensions} from 'react-native';
 import axios from 'axios';
 import Header from '../components/Header';
 import backgroundImg from '../assets/background.png';
 import Icon from 'react-native-vector-icons/Ionicons';
+
+const {width} = Dimensions.get('window');
 
 const AboutScreen = () => {
   const [aboutData, setAboutData] = useState(null);
@@ -85,7 +87,6 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: 'cover',
   },
-
   loader: {
     marginTop: 10,
     fontSize: 18,
@@ -97,9 +98,9 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   heroImage: {
-    width: '100%',
-    height: 250,
-    borderRadius: 10,
+    width: width * 1,
+    height: width * 0.5,
+    borderRadius: 4,
     marginBottom: 20,
   },
   description: {
@@ -125,12 +126,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginHorizontal: 10,
-    width: 150,
+    width: width * 0.4,
   },
   memberImage: {
-    width: 150,
-    height: 250,
-    borderRadius: 10,
+    width: width * 0.4,
+    height: width * 0.8,
+    borderRadius: 4,
     marginBottom: 10,
   },
   memberName: {

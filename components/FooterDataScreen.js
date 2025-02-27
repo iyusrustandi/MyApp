@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Dimensions} from 'react-native';
 
-const screenWidth = Dimensions.get('window').width;
+const {width, height} = Dimensions.get('window');
 
 const FooterDataScreen = ({handlePrevious, handleNext, totalSongs}) => {
   return (
@@ -9,7 +9,9 @@ const FooterDataScreen = ({handlePrevious, handleNext, totalSongs}) => {
       <TouchableOpacity style={styles.button} onPress={handlePrevious}>
         <Text style={styles.buttonText}>Previous</Text>
       </TouchableOpacity>
+
       <Text style={styles.totalText}>Total Song: {totalSongs}</Text>
+
       <TouchableOpacity style={styles.button} onPress={handleNext}>
         <Text style={styles.buttonText}>Next</Text>
       </TouchableOpacity>
@@ -22,23 +24,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
+    paddingHorizontal: width * 0.05,
     backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
   },
   totalText: {
-    fontSize: screenWidth * 0.03,
+    fontSize: width * 0.03,
     fontWeight: 'bold',
-    textAlign: 'center',
     color: '#050A30',
+    marginHorizontal: width * 0.05,
   },
   button: {
     backgroundColor: '#050A30',
-    paddingVertical: 4,
-    paddingHorizontal: 8,
+    paddingVertical: height * 0.01,
+    paddingHorizontal: width * 0.05,
     borderRadius: 8,
   },
   buttonText: {
-    fontSize: 18,
+    fontSize: width * 0.03,
     color: '#fff',
     fontWeight: 'bold',
   },

@@ -1,17 +1,19 @@
 import React from 'react';
-import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, Image, TouchableOpacity, StyleSheet, Dimensions} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import google from '../assets/chrome.png';
 
-const HeaderDataScreen = ({toggleMenu}) => {
+const {width, height} = Dimensions.get('window');
+
+const HeaderDataScreen = () => {
   const navigation = useNavigation();
 
   return (
     <View style={styles.header}>
-      {/* Tombol Back dengan ikon dan tulisan */}
+      {/* Tombol Back */}
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Icon name="arrow-back" size={32} color="#fff" fontWeight="bold" />
+        <Icon name="arrow-back" size={width * 0.07} color="#fff" />
       </TouchableOpacity>
 
       {/* Judul Header */}
@@ -29,35 +31,28 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    padding: 16,
+    justifyContent: 'space-between',
     backgroundColor: '#050A30',
     elevation: 5,
     borderBottomWidth: 2,
     borderBottomColor: '#ddd',
   },
   heading: {
-    fontSize: 24,
+    fontSize: width * 0.05,
     fontWeight: 'bold',
     color: '#fff',
     textAlign: 'center',
     flex: 1,
   },
   backButton: {
-    position: 'absolute',
-    left: 16,
-    zIndex: 1,
+    padding: width * 0.02,
   },
   googleButton: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    position: 'absolute',
-    right: 16,
-    zIndex: 1,
+    padding: width * 0.015,
   },
   google: {
-    width: 50,
-    height: 50,
+    width: width * 0.1,
+    height: width * 0.1,
     resizeMode: 'contain',
   },
 });
